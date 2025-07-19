@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <Windows.h>
 
 // Omitting header files for simplicity
 #include "alien.cpp"
@@ -12,8 +13,13 @@ int main()
         sf::Style::None
     );
 
-    //sf::CircleShape shape(100.f);
-    //shape.setFillColor(sf::Color::Green);
+    
+    HWND hwnd = window.getNativeHandle();
+
+    // Window transparency code for windows
+    SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT);
+    SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 
     // Need to see how to properly bundle assets with SFML
     sf::Texture texture;
@@ -37,8 +43,8 @@ int main()
                 window.close();
         }
 
-        window.clear();
-        //window.draw(shape);
+        window.clear(sf::Color::Black);
+    
         for (auto& alien : aliens)
             alien.draw(window);
 
