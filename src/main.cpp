@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "alien.hpp"
-#include "audio_manager.hpp"
+#include "audio_capture.hpp"
 
 int main()
 {
@@ -53,7 +53,7 @@ int main()
         return -1;
 
     std::vector<Alien> aliens;
-    const int NUM_ALIENS = 500;
+    const int NUM_ALIENS = 100;
 
     for (int i = 0; i < NUM_ALIENS; ++i) {
         float x = std::rand() % window.getSize().x;
@@ -67,8 +67,14 @@ int main()
         );
     }
 
-    sf::Clock clock;
+    AudioCapture audio;
+    if (!audio.initialize()) {
+        std::cerr << "Audio init failed\n";
+        return -1;
+    }
+    audio.start();
 
+    sf::Clock clock;
     while (window.isOpen())
     {
         float deltaTime = clock.restart().asSeconds();
@@ -77,6 +83,8 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+
+        audio.debugPrint();
 
         // Used to wipe black pixels (our background) to make the window clear
         window.clear(sf::Color::Black);

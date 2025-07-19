@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
 	src/main.cpp
 	src/alien.cpp
 	src/audio_manager.cpp
+    src/audio_capture.cpp
  "src/alien.hpp" "src/audio_manager.hpp")
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
