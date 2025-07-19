@@ -67,7 +67,7 @@ int main()
         );
     }
 
-    const float ENERGY_THRESHOLD = 0.05f;
+    const float ENERGY_THRESHOLD = 0.06f;
     AudioCapture audio;
     if (!audio.initialize()) {
         std::cerr << "Audio init failed\n";
@@ -86,7 +86,8 @@ int main()
         }
 
         float energy = audio.calculateEnergy();
-        std::cout << "Energy: " << energy << std::endl;
+
+        //std::cout << "Energy: " << energy << std::endl;
 
         // Used to wipe black pixels (our background) to make the window clear
         window.clear(sf::Color::Black);
