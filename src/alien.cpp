@@ -26,6 +26,14 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 			state = AlienState::IDLE;
 		}
 	}
+	else if (state == AlienState::BOOGIE) {
+		bounceTimer += delta;
+
+		float offsetY = std::sin(bounceTimer * BOUNCE_SPEED) * BOUNCE_HEIGHT;
+
+		sf::Vector2f basePos = sprite.getPosition();
+		sprite.setPosition({ basePos.x, basePos.y + offsetY });
+	}
 }
 
 void Alien::setState(AlienState newState) {

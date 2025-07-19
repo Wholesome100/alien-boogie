@@ -26,4 +26,8 @@ private:
 
     sf::Vector2f targetPosition;
     static constexpr float SPEED = 100.f;
+
+    float bounceTimer = 0.0f;
+    const float BOUNCE_SPEED = 6.0f;
+    const float BOUNCE_HEIGHT = 10.0f;
 };

@@ -1,24 +1,20 @@
 // Code for WASAPI loopback recording
 // Needed to run FFT on live audio streams
+
 #include "audio_capture.hpp"
 
-// Stop windows.h from defining min over std
 #define NOMINMAX
 #include <Windows.h>
-#include <algorithm>
-
 #include <mmdeviceapi.h>
 #include <audioclient.h>
-
 #include <iostream>
-#include <vector>
-
+#include <algorithm>
 
 #pragma comment(lib, "Ole32.lib")
 
-static IAudioCaptureClient* pCaptureClient = nullptr;
-static IAudioClient* pAudioClient = nullptr;
-static bool capturing = false;
+IAudioCaptureClient* AudioCapture::pCaptureClient = nullptr;
+IAudioClient* AudioCapture::pAudioClient = nullptr;
+bool AudioCapture::capturing = false;
 
 bool AudioCapture::initialize() {
     std::ignore = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -71,6 +67,17 @@ std::vector<float> AudioCapture::getSamples() {
     }
 
     return samples;
+}
+
+float AudioCapture::calculateEnergy() {
+    auto samples = getSamples();
+    if (samples.empty()) return 0.0f;
+
+    float energy = 0.0f;
+    for (float sample : samples)
+        energy += sample * sample;
+
+    return energy / samples.size();
 }
 
 void AudioCapture::debugPrint() {

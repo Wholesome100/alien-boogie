@@ -67,6 +67,7 @@ int main()
         );
     }
 
+    const float ENERGY_THRESHOLD = 0.05f;
     AudioCapture audio;
     if (!audio.initialize()) {
         std::cerr << "Audio init failed\n";
@@ -84,16 +85,23 @@ int main()
                 window.close();
         }
 
-        audio.debugPrint();
+        float energy = audio.calculateEnergy();
+        std::cout << "Energy: " << energy << std::endl;
 
         // Used to wipe black pixels (our background) to make the window clear
         window.clear(sf::Color::Black);
 
-        for (auto& alien : aliens)
+        for (auto& alien : aliens) {
+            if (energy > ENERGY_THRESHOLD) {
+                std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
+                alien.setState(AlienState::BOOGIE);
+            }
+            else {
+                alien.setState(AlienState::IDLE);
+            }
             alien.update(deltaTime, window);
-    
-        for (auto& alien : aliens)
             alien.draw(window);
+        }
 
         window.display();
     }
