@@ -1,18 +1,15 @@
-#include <SFML/Graphics.hpp>
-#include <random>
+#include "alien.hpp"
 
-class Alien {
-public:
-	Alien(sf::Texture& texture, sf::Vector2f position)
-		: sprite(texture)
-	{
-		sprite.setPosition(position);
-	}
+Alien::Alien(sf::Texture& texture, sf::Vector2f position)
+	: sprite(texture)
+{
+	sprite.setPosition(position);
+}
 
-	void draw(sf::RenderWindow& window) {
-		window.draw(sprite);
-	}
+void Alien::draw(sf::RenderWindow& window) {
+	window.draw(sprite);
+}
 
-private:
-	sf::Sprite sprite;
-};
+auto Alien::getAlienPosition() -> sf::Vector2f {
+	return sprite.getPosition();
+}

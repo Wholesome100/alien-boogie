@@ -2,9 +2,8 @@
 #include <SFML/Audio.hpp>
 #include <Windows.h>
 
-// Omitting header files for simplicity
-#include "alien.cpp"
-#include "audio_manager.cpp"
+#include "alien.hpp"
+#include "audio_manager.hpp"
 
 int main()
 {
@@ -19,11 +18,13 @@ int main()
     // Window transparency code for windows
     SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT);
+    
+    // This is explicitly setting the background color to black
     SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 
     // Need to see how to properly bundle assets with SFML
     sf::Texture texture;
-    if (!texture.loadFromFile("../../../../src/assets/alien-base.png"))
+    if (!texture.loadFromFile("assets/alien-base.png"))
         return -1;
 
     std::vector<Alien> aliens;
@@ -43,7 +44,9 @@ int main()
                 window.close();
         }
 
+        // Used to wipe black pixels (our background) to make the window clear
         window.clear(sf::Color::Black);
+        window.clear();
     
         for (auto& alien : aliens)
             alien.draw(window);

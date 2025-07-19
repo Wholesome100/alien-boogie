@@ -16,7 +16,7 @@ add_executable(${PROJECT_NAME}
 	src/main.cpp
 	src/alien.cpp
 	src/audio_manager.cpp
-)
+ "src/alien.hpp" "src/audio_manager.hpp")
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -24,4 +24,9 @@ target_link_libraries(${PROJECT_NAME}
 	PRIVATE 
 	SFML::Graphics
 	SFML::Audio
+)
+
+add_custom_command(TARGET alien_boogie POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:alien_boogie>/assets
 )
