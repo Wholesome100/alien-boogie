@@ -1,6 +1,11 @@
 #pragma once
 #include <vector>
 
+#include <mmdeviceapi.h>
+#include <audioclient.h>
+#include <wrl/client.h> // For ComPtr
+
+
 class AudioCapture {
 public:
     bool initialize();
@@ -13,7 +18,9 @@ public:
 
 private:
     // No external access needed
-    static class IAudioCaptureClient* pCaptureClient;
-    static class IAudioClient* pAudioClient;
+    // COM interface wrappers
+    static Microsoft::WRL::ComPtr<IAudioCaptureClient> pCaptureClient;
+    static Microsoft::WRL::ComPtr<IAudioClient> pAudioClient;
+
     static bool capturing;
 };

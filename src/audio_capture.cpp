@@ -1,41 +1,56 @@
 // Code for WASAPI loopback recording
 // Needed to run FFT on live audio streams
+#define NOMINMAX
 
 #include "audio_capture.hpp"
 
-#define NOMINMAX
+// NOMINMAX is to stop Windows.h colliding with std::min
 #include <Windows.h>
+
 #include <mmdeviceapi.h>
 #include <audioclient.h>
+#include <wrl/client.h>
 #include <iostream>
 #include <algorithm>
 
 #pragma comment(lib, "Ole32.lib")
 
-IAudioCaptureClient* AudioCapture::pCaptureClient = nullptr;
-IAudioClient* AudioCapture::pAudioClient = nullptr;
+using Microsoft::WRL::ComPtr;
+
+ComPtr<IAudioCaptureClient> AudioCapture::pCaptureClient;
+ComPtr<IAudioClient> AudioCapture::pAudioClient;
 bool AudioCapture::capturing = false;
 
 bool AudioCapture::initialize() {
     std::ignore = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
-    IMMDeviceEnumerator* pEnumerator = nullptr;
-    IMMDevice* pDevice = nullptr;
-    std::ignore = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_ALL, IID_PPV_ARGS(&pEnumerator));
-    pEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &pDevice);
+    ComPtr<IMMDeviceEnumerator> pEnumerator;
+    ComPtr<IMMDevice> pDevice;
 
-    pDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void**)&pAudioClient);
+    HRESULT hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL,
+        IID_PPV_ARGS(&pEnumerator));
+    if (FAILED(hr)) return false;
+
+    hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &pDevice);
+    if (FAILED(hr)) return false;
+
+    hr = pDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, &pAudioClient);
+    if (FAILED(hr)) return false;
 
     WAVEFORMATEX* pwfx = nullptr;
-    pAudioClient->GetMixFormat(&pwfx);
+    hr = pAudioClient->GetMixFormat(&pwfx);
+    if (FAILED(hr)) return false;
 
-    REFERENCE_TIME hnsBufferDuration = 10000000; // 1 second
-    pAudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED,
+    REFERENCE_TIME bufferDuration = 10000000; // 1 second
+    hr = pAudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED,
         AUDCLNT_STREAMFLAGS_LOOPBACK,
-        hnsBufferDuration, 0, pwfx, NULL);
+        bufferDuration, 0, pwfx, nullptr);
+    CoTaskMemFree(pwfx); // release audio format memory
+    if (FAILED(hr)) return false;
 
-    pAudioClient->GetService(IID_PPV_ARGS(&pCaptureClient));
-    return true;
+    hr = pAudioClient->GetService(IID_PPV_ARGS(&pCaptureClient));
+    return SUCCEEDED(hr);
+
 }
 
 bool AudioCapture::start() {

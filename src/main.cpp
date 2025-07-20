@@ -2,6 +2,8 @@
 #include <SFML/Audio.hpp>
 #include <Windows.h>
 #include <iostream>
+#include <random>
+
 
 #include "alien.hpp"
 #include "audio_capture.hpp"
@@ -55,16 +57,17 @@ int main()
     std::vector<Alien> aliens;
     const int NUM_ALIENS = 100;
 
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> distX(0, window.getSize().x);
+    std::uniform_int_distribution<int> distY(0, window.getSize().y);
+
     for (int i = 0; i < NUM_ALIENS; ++i) {
-        float x = std::rand() % window.getSize().x;
-        float y = std::rand() % window.getSize().y;
+        float x = distX(rng);
+        float y = distY(rng);
         aliens.emplace_back(texture, sf::Vector2f(x, y));
 
         aliens.back().setMovementState(MovementState::WALK);
-        aliens.back().setTargetPosition(sf::Vector2f(
-            static_cast<float>(std::rand() % window.getSize().x),
-            static_cast<float>(std::rand() % window.getSize().y))
-        );
+        aliens.back().setTargetPosition(sf::Vector2f(distX(rng), distY(rng)));
     }
 
     const float ENERGY_THRESHOLD = 0.06f;
@@ -116,4 +119,8 @@ int main()
 
         window.display();
     }
+
+    // Stop the audio stream and uninitialize the COM
+    audio.stop();
+    CoUninitialize();
 }

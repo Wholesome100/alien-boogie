@@ -6,7 +6,7 @@ enum class MovementState {
     WALK
 };
 
-enum class AnimationState {
+enum class ActionState {
     NONE,
     BOOGIE,
     ZAPPED
@@ -19,6 +19,8 @@ public:
     void draw(sf::RenderWindow& window);
     void update(float delta, const sf::RenderWindow& window);
 
+    void goWalk(float delta);
+
     void setMovementState(MovementState newState);
     auto getMovementState() -> MovementState;
 
@@ -30,7 +32,7 @@ public:
 private:
     sf::Sprite sprite;
     MovementState moveState{ MovementState::IDLE };
-    AnimationState animState{ AnimationState::NONE };
+    ActionState actionState{ ActionState::NONE };
 
     sf::Vector2f targetPosition;
     static constexpr float SPEED = 100.f;
