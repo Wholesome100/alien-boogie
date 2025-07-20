@@ -60,7 +60,7 @@ int main()
         float y = std::rand() % window.getSize().y;
         aliens.emplace_back(texture, sf::Vector2f(x, y));
 
-        aliens.back().setState(AlienState::WALK);
+        aliens.back().setMovementState(MovementState::WALK);
         aliens.back().setTargetPosition(sf::Vector2f(
             static_cast<float>(std::rand() % window.getSize().x),
             static_cast<float>(std::rand() % window.getSize().y))
@@ -92,14 +92,24 @@ int main()
         // Used to wipe black pixels (our background) to make the window clear
         window.clear(sf::Color::Black);
 
+        // Code to register alien clicks despite window clickthrough
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
         for (auto& alien : aliens) {
             if (energy > ENERGY_THRESHOLD) {
                 std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
-                alien.setState(AlienState::BOOGIE);
+                //alien.setState(MovementState::BOOGIE);
             }
             else {
-                alien.setState(AlienState::IDLE);
+                //alien.setState(MovementState::IDLE);
             }
+
+            if (alien.getBounds().contains(static_cast<sf::Vector2f>(mousePos))
+                && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                std::cout << "Zapped!";
+            }
+
+
             alien.update(deltaTime, window);
             alien.draw(window);
         }

@@ -1,10 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-enum class AlienState {
+enum class MovementState {
     IDLE,
-    WALK,
-    BOOGIE
+    WALK
+};
+
+enum class AnimationState {
+    NONE,
+    BOOGIE,
+    ZAPPED
 };
 
 class Alien {
@@ -14,15 +19,18 @@ public:
     void draw(sf::RenderWindow& window);
     void update(float delta, const sf::RenderWindow& window);
 
-    void setState(AlienState newState);
-    auto getState() -> AlienState;
+    void setMovementState(MovementState newState);
+    auto getMovementState() -> MovementState;
 
     void setTargetPosition(const sf::Vector2f& target);
     auto getTargetPosition() -> sf::Vector2f;
 
+    auto getBounds() -> sf::FloatRect;
+
 private:
     sf::Sprite sprite;
-    AlienState state{ AlienState::IDLE };
+    MovementState moveState{ MovementState::IDLE };
+    AnimationState animState{ AnimationState::NONE };
 
     sf::Vector2f targetPosition;
     static constexpr float SPEED = 100.f;

@@ -12,7 +12,7 @@ void Alien::draw(sf::RenderWindow& window) {
 }
 
 void Alien::update(float delta, const sf::RenderWindow& window) {
-	if (state == AlienState::WALK) {
+	if (moveState == MovementState::WALK) {
 		sf::Vector2f current{ sprite.getPosition() };
 		sf::Vector2f direction{ targetPosition - current };
 
@@ -23,25 +23,28 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 			sprite.move(direction * SPEED * delta);
 		}
 		else {
-			state = AlienState::IDLE;
+			moveState = MovementState::IDLE;
 		}
 	}
-	else if (state == AlienState::BOOGIE) {
+	/*else if (state == AnimationState::BOOGIE) {
 		bounceTimer += delta;
 
 		float offsetY = std::sin(bounceTimer * BOUNCE_SPEED) * BOUNCE_HEIGHT;
 
 		sf::Vector2f basePos = sprite.getPosition();
 		sprite.setPosition({ basePos.x, basePos.y + offsetY });
-	}
+	}*/
 }
 
-void Alien::setState(AlienState newState) {
-	state = newState;
+
+void Alien::setMovementState(MovementState newState){
+	moveState = newState;
 }
-auto Alien::getState() -> AlienState{
-	return state;
+
+auto Alien::getMovementState() -> MovementState{
+	return moveState;
 }
+
 
 void Alien::setTargetPosition(const sf::Vector2f& target) {
 	targetPosition = target;
@@ -49,4 +52,9 @@ void Alien::setTargetPosition(const sf::Vector2f& target) {
 
 auto Alien::getTargetPosition() -> sf::Vector2f {
 	return targetPosition;
+}
+
+
+auto Alien::getBounds() -> sf::FloatRect {
+	return sprite.getGlobalBounds();
 }
