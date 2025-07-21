@@ -3,13 +3,14 @@
 
 enum class MovementState {
     IDLE,
-    WALK
+    WALK,
+    DEAD
 };
 
 enum class ActionState {
     NONE,
     BOOGIE,
-    ZAPPED
+    ZAPPED,
 };
 
 class Alien {
@@ -19,23 +20,26 @@ public:
     void draw(sf::RenderWindow& window);
     void update(float delta, const sf::RenderWindow& window);
 
-    void goWalk(float delta);
+    void goWalk(const sf::Vector2f& target);
+    void respawn(const sf::Vector2f& newSpawn);
 
     void setMovementState(MovementState newState);
     auto getMovementState() -> MovementState;
 
-    void setTargetPosition(const sf::Vector2f& target);
-    auto getTargetPosition() -> sf::Vector2f;
+    void setActionState(ActionState newState);
+    auto getActionState() -> ActionState;
 
     auto getBounds() -> sf::FloatRect;
 
 private:
     sf::Sprite sprite;
+
     MovementState moveState{ MovementState::IDLE };
     ActionState actionState{ ActionState::NONE };
 
     sf::Vector2f targetPosition;
     static constexpr float SPEED = 100.f;
+    static constexpr float ZAP_FALLSPEED = 120.f;
 
     float bounceTimer = 0.0f;
     const float BOUNCE_SPEED = 6.0f;

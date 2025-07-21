@@ -66,8 +66,8 @@ int main()
         float y = distY(rng);
         aliens.emplace_back(texture, sf::Vector2f(x, y));
 
-        aliens.back().setMovementState(MovementState::WALK);
-        aliens.back().setTargetPosition(sf::Vector2f(distX(rng), distY(rng)));
+        //aliens.back().setMovementState(MovementState::WALK);
+        aliens.back().goWalk(sf::Vector2f(distX(rng), distY(rng)));
     }
 
     const float ENERGY_THRESHOLD = 0.06f;
@@ -82,6 +82,7 @@ int main()
     while (window.isOpen())
     {
         float deltaTime = clock.restart().asSeconds();
+        //std::cout << deltaTime;
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -112,9 +113,17 @@ int main()
                 std::cout << "Zapped!";
             }
 
+            // Dead aliens do not draw themselves or update. They are dead.
+            if (alien.getMovementState() != MovementState::DEAD) {
+                if (alien.getMovementState() != MovementState::WALK)
+                    alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));
 
-            alien.update(deltaTime, window);
-            alien.draw(window);
+                alien.update(deltaTime, window);
+                alien.draw(window);
+            }
+            else {
+                //Give aliens a chance to respawn and become active again
+            }
         }
 
         window.display();
