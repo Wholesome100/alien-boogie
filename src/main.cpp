@@ -51,7 +51,7 @@ int main()
 
     // Need to see how to properly bundle assets with SFML
     sf::Texture texture;
-    if (!texture.loadFromFile("assets/alien-base.png"))
+    if (!texture.loadFromFile("assets/alien-frames.png"))
         return -1;
 
     std::vector<Alien> aliens;
@@ -65,9 +65,6 @@ int main()
         float x = distX(rng);
         float y = distY(rng);
         aliens.emplace_back(texture, sf::Vector2f(x, y));
-
-        //aliens.back().setMovementState(MovementState::WALK);
-        aliens.back().goWalk(sf::Vector2f(distX(rng), distY(rng)));
     }
 
     const float ENERGY_THRESHOLD = 0.06f;
@@ -101,7 +98,7 @@ int main()
 
         for (auto& alien : aliens) {
             if (energy > ENERGY_THRESHOLD) {
-                std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
+                //std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
                 //alien.setState(MovementState::BOOGIE);
             }
             else {
@@ -115,8 +112,8 @@ int main()
 
             // Dead aliens do not draw themselves or update. They are dead.
             if (alien.getMovementState() != MovementState::DEAD) {
-                if (alien.getMovementState() != MovementState::WALK)
-                    alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));
+               /* if (alien.getMovementState() != MovementState::WALK)
+                    alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));*/
 
                 alien.update(deltaTime, window);
                 alien.draw(window);

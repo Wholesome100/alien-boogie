@@ -5,6 +5,7 @@ Alien::Alien(sf::Texture& texture, sf::Vector2f position)
 	: sprite(texture)
 {
 	sprite.setPosition(position);
+	sprite.setTextureRect(sf::IntRect({ 16, 0 }, { 16, 16 }));
 }
 
 void Alien::draw(sf::RenderWindow& window) {
