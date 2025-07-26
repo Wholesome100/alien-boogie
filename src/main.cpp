@@ -51,8 +51,24 @@ int main()
 
     // Need to see how to properly bundle assets with SFML
     sf::Texture texture;
-    if (!texture.loadFromFile("assets/alien-frames.png"))
+    if (!texture.loadFromFile("assets/alien-frames.png")) {
+        std::cout << "Failed to load texture atlas.";
         return -1;
+    }
+        
+    // We're loading in the .ttf for Bitcount Prop Single
+    sf::Font textFont;
+    if (!textFont.openFromFile("assets/alien-font.ttf")) {
+        std::cout << "Failed to load font file.";
+        return -1;
+    }
+
+    // Text testing in SFML
+    sf::Text text(textFont);
+    text.setString("ALIENS!!! ALIENS!!! ALIENS!!!");
+    text.setCharacterSize(100);
+    text.setFillColor(sf::Color::Green);
+        
 
     std::vector<Alien> aliens;
     const int NUM_ALIENS = 100;
@@ -122,6 +138,8 @@ int main()
                 //Give aliens a chance to respawn and become active again
             }
         }
+
+        window.draw(text);
 
         window.display();
     }

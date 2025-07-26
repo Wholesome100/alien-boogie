@@ -32,7 +32,9 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 		}
 	}
 
+	// Track time for animations
 	elapsedTime += delta;
+
 	// Code block to determine animation priority
 	// Zapped block breaks the rules a bit by moving aliens while animating
 	if (actionState == ActionState::ZAPPED) {
@@ -51,13 +53,24 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 	}
 	else {
 		// Play the idle animation
-		if (elapsedTime >= FRAME_TIME) {
-			elapsedTime = 0.0f;
-			sprite.setTextureRect(
-				IDLE_FRAMES[++currentFrame % IDLE_FRAMES.size()]);
-		}
+		animate(delta, BOOGIE_THREE, false);
 	}
 
+}
+
+
+void Alien::animate(float delta, const std::vector<sf::IntRect>& spriteFrames, bool flipped) {
+	if (elapsedTime >= FRAME_TIME) {
+		elapsedTime = 0.0f;
+
+		if (flipped) {
+			// Flip the scale of the texture rect around the Y axis when flipped is true
+		}
+		else {
+			sprite.setTextureRect(
+				spriteFrames[++currentFrame % spriteFrames.size()]);
+		}
+	}
 }
 
 // A function that has a chance to be called during update, will make aliens walk to a new position

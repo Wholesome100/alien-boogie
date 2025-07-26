@@ -19,6 +19,7 @@ public:
    
     void draw(sf::RenderWindow& window);
     void update(float delta, const sf::RenderWindow& window);
+    void animate(float delta, const std::vector<sf::IntRect>& spriteFrames, bool flipped);
 
     void goWalk(const sf::Vector2f& target);
     void respawn(const sf::Vector2f& newSpawn);
@@ -49,6 +50,13 @@ private:
         sf::IntRect{{ 48, 0 }, { 16, 16 }}
     };
 
+    const std::vector<sf::IntRect>
+        BOOGIE_THREE
+    {
+        sf::IntRect{{ 80, 0 }, { 16, 16 }},
+        sf::IntRect{{ 96, 0 }, { 16, 16 }}
+    };
+
     MovementState moveState{ MovementState::IDLE };
     ActionState actionState{ ActionState::NONE };
 
@@ -56,7 +64,7 @@ private:
     static constexpr float SPEED = 100.f;
     static constexpr float ZAP_FALLSPEED = 120.f;
 
-    float elapsedTime = 0.0f;
     int currentFrame = 0;
+    float elapsedTime = 0.0f;
     const float FRAME_TIME = 0.2f;
 };
