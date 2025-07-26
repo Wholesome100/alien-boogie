@@ -22,7 +22,8 @@ ComPtr<IAudioClient> AudioCapture::pAudioClient;
 bool AudioCapture::capturing = false;
 
 bool AudioCapture::initialize() {
-    std::ignore = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    // Declaration moved to main
+    // std::ignore = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     ComPtr<IMMDeviceEnumerator> pEnumerator;
     ComPtr<IMMDevice> pDevice;
