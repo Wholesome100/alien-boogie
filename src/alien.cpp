@@ -32,6 +32,7 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 		}
 	}
 
+	elapsedTime += delta;
 	// Code block to determine animation priority
 	// Zapped block breaks the rules a bit by moving aliens while animating
 	if (actionState == ActionState::ZAPPED) {
@@ -50,6 +51,11 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 	}
 	else {
 		// Play the idle animation
+		if (elapsedTime >= FRAME_TIME) {
+			elapsedTime = 0.0f;
+			sprite.setTextureRect(
+				IDLE_FRAMES[++currentFrame % IDLE_FRAMES.size()]);
+		}
 	}
 
 }

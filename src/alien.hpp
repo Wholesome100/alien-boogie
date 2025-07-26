@@ -34,6 +34,21 @@ public:
 private:
     sf::Sprite sprite;
 
+    // Variables to store the frames for certain animations
+    const std::vector<sf::IntRect> 
+        IDLE_FRAMES
+    {
+        sf::IntRect{{ 0, 0 }, { 16, 16 }},
+        sf::IntRect{{ 16, 0 }, { 16, 16 }}
+    };
+
+    const std::vector<sf::IntRect>
+        WALK_FRAMES
+    {
+        sf::IntRect{{ 32, 0 }, { 16, 16 }},
+        sf::IntRect{{ 48, 0 }, { 16, 16 }}
+    };
+
     MovementState moveState{ MovementState::IDLE };
     ActionState actionState{ ActionState::NONE };
 
@@ -41,7 +56,7 @@ private:
     static constexpr float SPEED = 100.f;
     static constexpr float ZAP_FALLSPEED = 120.f;
 
-    float bounceTimer = 0.0f;
-    const float BOUNCE_SPEED = 6.0f;
-    const float BOUNCE_HEIGHT = 10.0f;
+    float elapsedTime = 0.0f;
+    int currentFrame = 0;
+    const float FRAME_TIME = 0.2f;
 };
