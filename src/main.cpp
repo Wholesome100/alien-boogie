@@ -127,11 +127,9 @@ int main()
                 if (energy > ENERGY_THRESHOLD) {
                     //std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
                     alien.setActionState(ActionState::BOOGIE);
+                    alien.setBoogieDuration(0.4f);
                 }
-                else {
-                    alien.setActionState(ActionState::NONE);
-                }
-
+                
                 if (alien.getBounds().contains(static_cast<sf::Vector2f>(mousePos))
                     && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
                     alien.setActionState(ActionState::ZAPPED);
@@ -140,8 +138,12 @@ int main()
 
                 // Dead aliens do not draw themselves or update. They are dead.
                 if (alien.getMovementState() != MovementState::DEAD) {
-                    /*if (alien.getMovementState() != MovementState::WALK)
-                        alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));*/
+                    if (alien.getMovementState() != MovementState::WALK) {
+                        // Aliens have a 1/100000 chance to walk every frame
+                        if (std::uniform_int_distribution<int>(0, 100000)(rng) < 1) {
+                            alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));
+                        }
+                    }
 
                     alien.update(deltaTime, window);
                     alien.draw(window);

@@ -36,14 +36,17 @@ public:
     void setActionState(ActionState newState);
     auto getActionState() -> ActionState;
 
-    auto getBounds() -> sf::FloatRect;
+    void setBoogieDuration(float boogieTime);
 
+    auto getBounds() -> sf::FloatRect;
+    
 private:
     sf::Sprite sprite;
 
     // Var to give each alien a unique dance style
     BoogieType boogieType = BoogieType::ONE;
-
+    float boogieDuration = 0.4f;
+    
     // Variables to store the frames for certain animations
     const std::vector<sf::IntRect> 
         IDLE_FRAMES

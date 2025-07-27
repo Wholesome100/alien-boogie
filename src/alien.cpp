@@ -69,6 +69,7 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 		}
 	}
 	else if (actionState == ActionState::BOOGIE) {
+		boogieDuration -= delta;
 		switch (boogieType) {
 		case BoogieType::ONE: 
 			animate(delta, BOOGIE_ONE); 
@@ -80,6 +81,9 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 			animate(delta, BOOGIE_THREE); 
 			break;
 		}
+
+		if (boogieDuration < 0.0f)
+			setActionState(ActionState::NONE);
 	}
 	else if (moveState == MovementState::WALK) {
 		// Play the walk animation
@@ -133,6 +137,9 @@ auto Alien::getActionState() -> ActionState {
 	return actionState;
 }
 
+void Alien::setBoogieDuration(float boogieTime) {
+	boogieDuration = boogieTime;
+}
 
 auto Alien::getBounds() -> sf::FloatRect {
 	return sprite.getGlobalBounds();
