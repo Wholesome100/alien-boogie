@@ -1,11 +1,28 @@
-#include "alien.hpp"
 #include <cmath>
+#include <random>
+
+#include "alien.hpp"
 
 Alien::Alien(sf::Texture& texture, sf::Vector2f position)
 	: sprite(texture)
 {
 	sprite.setPosition(position);
 	sprite.setTextureRect(sf::IntRect({ 16, 0 }, { 16, 16 }));
+
+	// Randomly assign a boogie type to the aliens
+	thread_local std::mt19937 generator(std::random_device{}());
+	std::uniform_int_distribution<int> dist(0, 2);
+	switch (dist(generator)) {
+	case 0: 
+		boogieType = BoogieType::ONE; 
+		break;
+	case 1: 
+		boogieType = BoogieType::TWO; 
+		break;
+	case 2: 
+		boogieType = BoogieType::THREE; 
+		break;
+	}
 }
 
 void Alien::draw(sf::RenderWindow& window) {
@@ -38,38 +55,48 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 	// Code block to determine animation priority
 	// Zapped block breaks the rules a bit by moving aliens while animating
 	if (actionState == ActionState::ZAPPED) {
-		// Play the animation for being zapped
+		// Zapped aliens will be set to the last frame
+		sprite.setTextureRect(sf::IntRect{ { 96, 0 }, { 16, 16 } });
 
 		sprite.move({0.0f, ZAP_FALLSPEED * delta});
 		if (sprite.getPosition().y > window.getSize().y) {
 			// When an alien goes offscreen, set its state to DEAD
+			setActionState(ActionState::NONE);
+			setMovementState(MovementState::DEAD);
 		}
 	}
 	else if (actionState == ActionState::BOOGIE) {
-		// Play the animation for the boogie
+		switch (boogieType) {
+		case BoogieType::ONE: 
+			animate(delta, BOOGIE_ONE); 
+			break;
+		case BoogieType::TWO: 
+			animate(delta, BOOGIE_TWO); 
+			break;
+		case BoogieType::THREE: 
+			animate(delta, BOOGIE_THREE); 
+			break;
+		}
 	}
 	else if (moveState == MovementState::WALK) {
 		// Play the walk animation
+
 	}
 	else {
 		// Play the idle animation
-		animate(delta, BOOGIE_THREE, false);
+		animate(delta, IDLE_FRAMES);
 	}
 
 }
 
 
-void Alien::animate(float delta, const std::vector<sf::IntRect>& spriteFrames, bool flipped) {
+void Alien::animate(float delta, const std::vector<sf::IntRect>& spriteFrames) {
 	if (elapsedTime >= FRAME_TIME) {
 		elapsedTime = 0.0f;
 
-		if (flipped) {
-			// Flip the scale of the texture rect around the Y axis when flipped is true
-		}
-		else {
-			sprite.setTextureRect(
-				spriteFrames[++currentFrame % spriteFrames.size()]);
-		}
+		sprite.setTextureRect(
+			spriteFrames[++currentFrame % spriteFrames.size()]
+		);
 	}
 }
 

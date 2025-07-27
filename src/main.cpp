@@ -75,9 +75,11 @@ int main()
         // Text testing in SFML
         sf::Text text(textFont);
         text.setString("ALIENS!!! ALIENS!!! ALIENS!!!");
-        text.setCharacterSize(100);
+        text.setCharacterSize(100.f);
         text.setFillColor(sf::Color::Green);
-        
+
+        text.setOutlineColor(sf::Color::White);
+        text.setOutlineThickness(1.f);
 
         std::vector<Alien> aliens;
         const int NUM_ALIENS = 100;
@@ -92,7 +94,7 @@ int main()
             aliens.emplace_back(texture, sf::Vector2f(x, y));
         }
 
-        const float ENERGY_THRESHOLD = 0.06f;
+        const float ENERGY_THRESHOLD = 0.03f;
         AudioCapture audio;
         if (!audio.initialize()) {
             std::cerr << "Audio init failed\n";
@@ -124,14 +126,15 @@ int main()
             for (auto& alien : aliens) {
                 if (energy > ENERGY_THRESHOLD) {
                     //std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
-                    //alien.setState(MovementState::BOOGIE);
+                    alien.setActionState(ActionState::BOOGIE);
                 }
                 else {
-                    //alien.setState(MovementState::IDLE);
+                    alien.setActionState(ActionState::NONE);
                 }
 
                 if (alien.getBounds().contains(static_cast<sf::Vector2f>(mousePos))
                     && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                    alien.setActionState(ActionState::ZAPPED);
                     std::cout << "Zapped!";
                 }
 
