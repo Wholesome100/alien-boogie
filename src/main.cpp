@@ -140,7 +140,7 @@ int main()
 
                 // Dead aliens do not draw themselves or update. They are dead.
                 if (alien.getMovementState() != MovementState::DEAD) {
-                   /* if (alien.getMovementState() != MovementState::WALK)
+                    /*if (alien.getMovementState() != MovementState::WALK)
                         alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));*/
 
                     alien.update(deltaTime, window);

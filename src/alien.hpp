@@ -91,6 +91,7 @@ private:
 
     MovementState moveState{ MovementState::IDLE };
     ActionState actionState{ ActionState::NONE };
+    bool faceRight = false;
 
     sf::Vector2f targetPosition;
     static constexpr float SPEED = 100.f;

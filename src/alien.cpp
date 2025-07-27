@@ -37,6 +37,9 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 		sf::Vector2f current{ sprite.getPosition() };
 		sf::Vector2f direction{ targetPosition - current };
 
+		// Get the bool for if we're facing left or right
+		faceRight = (direction.x >= 0);
+		
 		//Calculate euclidean distance and assign to length
 		float length{ std::sqrt((direction.x * direction.x) + (direction.y * direction.y)) };
 		if (length > 1.0f) {
@@ -80,6 +83,7 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 	}
 	else if (moveState == MovementState::WALK) {
 		// Play the walk animation
+		faceRight ? animate(delta, RIGHT_WALK) : animate(delta, LEFT_WALK);
 
 	}
 	else {
