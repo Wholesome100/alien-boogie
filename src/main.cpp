@@ -75,7 +75,7 @@ int main()
         // Text testing in SFML
         sf::Text text(textFont);
         text.setString("ALIENS!!! ALIENS!!! ALIENS!!!");
-        text.setCharacterSize(100.f);
+        text.setCharacterSize(50.f);
         text.setFillColor(sf::Color::Green);
 
         text.setOutlineColor(sf::Color::White);
@@ -124,7 +124,8 @@ int main()
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
             for (auto& alien : aliens) {
-                if (energy > ENERGY_THRESHOLD) {
+                // check to make sure boogie isn't overriding zapped
+                if (energy > ENERGY_THRESHOLD && alien.getActionState() != ActionState::ZAPPED) {
                     //std::cout << "Boogie Triggered! Energy = " << energy << std::endl;
                     alien.setActionState(ActionState::BOOGIE);
                     alien.setBoogieDuration(0.4f);
@@ -133,14 +134,14 @@ int main()
                 if (alien.getBounds().contains(static_cast<sf::Vector2f>(mousePos))
                     && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
                     alien.setActionState(ActionState::ZAPPED);
-                    std::cout << "Zapped!";
+                    //std::cout << "Zapped!";
                 }
 
                 // Dead aliens do not draw themselves or update. They are dead.
                 if (alien.getMovementState() != MovementState::DEAD) {
                     if (alien.getMovementState() != MovementState::WALK) {
                         // Aliens have a 1/100000 chance to walk every frame
-                        if (std::uniform_int_distribution<int>(0, 100000)(rng) < 1) {
+                        if (std::uniform_int_distribution<int>(0, 50000)(rng) < 1) {
                             alien.goWalk(sf::Vector2f(distX(rng), distY(rng)));
                         }
                     }

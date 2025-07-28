@@ -68,33 +68,34 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 			setMovementState(MovementState::DEAD);
 		}
 	}
-	else if (actionState == ActionState::BOOGIE) {
-		boogieDuration -= delta;
-		switch (boogieType) {
-		case BoogieType::ONE: 
-			animate(delta, BOOGIE_ONE); 
-			break;
-		case BoogieType::TWO: 
-			animate(delta, BOOGIE_TWO); 
-			break;
-		case BoogieType::THREE: 
-			animate(delta, BOOGIE_THREE); 
-			break;
-		}
-
-		if (boogieDuration < 0.0f)
-			setActionState(ActionState::NONE);
-	}
-	else if (moveState == MovementState::WALK) {
-		// Play the walk animation
-		faceRight ? animate(delta, RIGHT_WALK) : animate(delta, LEFT_WALK);
-
-	}
 	else {
-		// Play the idle animation
-		animate(delta, IDLE_FRAMES);
-	}
+		if (actionState == ActionState::BOOGIE) {
+			boogieDuration -= delta;
+			switch (boogieType) {
+			case BoogieType::ONE:
+				animate(delta, BOOGIE_ONE);
+				break;
+			case BoogieType::TWO:
+				animate(delta, BOOGIE_TWO);
+				break;
+			case BoogieType::THREE:
+				animate(delta, BOOGIE_THREE);
+				break;
+			}
 
+			// boogieDuration serves to make dancing consistent
+			if (boogieDuration < 0.0f)
+				setActionState(ActionState::NONE);
+		}
+		else if (moveState == MovementState::WALK) {
+			// Play the walk animation
+			faceRight ? animate(delta, RIGHT_WALK) : animate(delta, LEFT_WALK);
+		}
+		else {
+			// Play the idle animation
+			animate(delta, IDLE_FRAMES);
+		}
+	}
 }
 
 
