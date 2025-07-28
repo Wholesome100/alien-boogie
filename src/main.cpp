@@ -77,7 +77,7 @@ int main()
 
 
         std::vector<Alien> aliens;
-        const int NUM_ALIENS = 100;
+        const int NUM_ALIENS = 1000;
 
         std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> distX(0, window.getSize().x);
@@ -146,7 +146,7 @@ int main()
                     alien.draw(window);
                 }
                 else {
-                    //Give aliens a chance to respawn and become active again
+                    
                 }
             }
 

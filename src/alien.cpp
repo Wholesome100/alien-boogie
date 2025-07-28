@@ -64,7 +64,9 @@ void Alien::update(float delta, const sf::RenderWindow& window) {
 		sprite.move({0.0f, ZAP_FALLSPEED * delta});
 		if (sprite.getPosition().y > window.getSize().y) {
 			// When an alien goes offscreen, set its state to DEAD
-			setActionState(ActionState::NONE);
+			//setActionState(ActionState::NONE);
+
+			// Don't need to update ActionState to stop scoring
 			setMovementState(MovementState::DEAD);
 		}
 	}
@@ -116,7 +118,8 @@ void Alien::goWalk(const sf::Vector2f& target) {
 }
 
 void Alien::respawn(const sf::Vector2f& newSpawn) {
-	moveState = MovementState::IDLE;
+	setActionState(ActionState::NONE);
+	setMovementState(MovementState::IDLE);
 	sprite.setPosition(newSpawn);
 }
 

@@ -12,6 +12,7 @@ ScoreLabel::ScoreLabel(sf::Font& textFont)
 	scoreText.setOutlineThickness(2.f);
 }
 
+// set the text to the new score and then draw the label
 void ScoreLabel::draw(sf::RenderWindow& window) {
 	scoreText.setString("Aliens Zapped: " + std::to_string(score));
 	window.draw(scoreText);
