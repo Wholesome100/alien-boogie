@@ -7,6 +7,7 @@
 
 #include "alien.hpp"
 #include "audio_capture.hpp"
+#include "score_label.hpp"
 
 int main()
 {
@@ -72,14 +73,8 @@ int main()
             return -1;
         }
 
-        // Text testing in SFML
-        sf::Text text(textFont);
-        text.setString("ALIENS!!! ALIENS!!! ALIENS!!!");
-        text.setCharacterSize(50.f);
-        text.setFillColor(sf::Color::Green);
+        ScoreLabel zappedScore(textFont);
 
-        text.setOutlineColor(sf::Color::White);
-        text.setOutlineThickness(1.f);
 
         std::vector<Alien> aliens;
         const int NUM_ALIENS = 100;
@@ -132,9 +127,10 @@ int main()
                 }
                 
                 if (alien.getBounds().contains(static_cast<sf::Vector2f>(mousePos))
-                    && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                    && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
+                    && alien.getActionState() != ActionState::ZAPPED) {
                     alien.setActionState(ActionState::ZAPPED);
-                    //std::cout << "Zapped!";
+                    zappedScore.updateScore(1);
                 }
 
                 // Dead aliens do not draw themselves or update. They are dead.
@@ -154,7 +150,7 @@ int main()
                 }
             }
 
-            window.draw(text);
+            zappedScore.draw(window);
 
             window.display();
         }

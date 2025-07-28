@@ -16,7 +16,7 @@ add_executable(${PROJECT_NAME}
 	src/main.cpp
 	src/alien.cpp
     src/audio_capture.cpp
-)
+ "src/score_label.cpp")
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
