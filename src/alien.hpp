@@ -102,5 +102,5 @@ private:
 
     int currentFrame = 0;
     float elapsedTime = 0.0f;
-    const float FRAME_TIME = 0.2f;
+    static constexpr float FRAME_TIME = 0.2f;
 };

@@ -88,9 +88,10 @@ int main()
         std::vector<Alien> aliens;
         const int NUM_ALIENS = 200;
 
+        // Subtract sprite size from upper ranges to prevent hiding aliens
         std::mt19937 rng(std::random_device{}());
-        std::uniform_int_distribution<int> distX(0, window.getSize().x);
-        std::uniform_int_distribution<int> distY(0, window.getSize().y);
+        std::uniform_int_distribution<int> distX(0, window.getSize().x - 16);
+        std::uniform_int_distribution<int> distY(0, window.getSize().y - 16);
 
         for (int i = 0; i < NUM_ALIENS; ++i) {
             float x = distX(rng);
