@@ -4,7 +4,6 @@
 #include <iostream>
 #include <random>
 
-
 #include "alien.hpp"
 #include "audio_capture.hpp"
 #include "score_label.hpp"
@@ -20,7 +19,7 @@ int main()
 
     // Additional scope needed here to ensure proper window and COM shutdown
     {
- #pragma region WindowSetup
+#pragma region WindowSetup
         const int SAFE_ZONE_PADDING{ 50 };
         int screen_x{ 800 };
         int screen_y{ 600 };
@@ -42,7 +41,7 @@ int main()
         }
 
         sf::RenderWindow window(sf::VideoMode({ static_cast<unsigned int>(screen_x),  static_cast<unsigned int>(screen_y) }),
-            "Boogie Test",
+            "Alien Boogie!",
             sf::Style::None
             // Fullscreen state doesn't work. Best bet is to get the largest fullscreen size and set the videomode to that
         );
@@ -59,7 +58,7 @@ int main()
         SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 #pragma endregion
 
-        // Need to see how to properly bundle assets with SFML
+#pragma region Systems Init
         sf::Texture texture;
         if (!texture.loadFromFile("assets/alien-frames.png")) {
             std::cout << "Failed to load texture atlas.";
@@ -73,11 +72,21 @@ int main()
             return -1;
         }
 
+        const float ENERGY_THRESHOLD = 0.03f;
+        AudioCapture audio;
+        if (!audio.initialize()) {
+            std::cerr << "Audio init failed\n";
+            return -1;
+        }
+#pragma endregion
+
+#pragma region Game Object Setup
+        // Instantiate our scorelabel to track how many aliens we zap
         ScoreLabel zappedScore(textFont);
 
 
         std::vector<Alien> aliens;
-        const int NUM_ALIENS = 1000;
+        const int NUM_ALIENS = 200;
 
         std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> distX(0, window.getSize().x);
@@ -88,15 +97,9 @@ int main()
             float y = distY(rng);
             aliens.emplace_back(texture, sf::Vector2f(x, y));
         }
-
-        const float ENERGY_THRESHOLD = 0.03f;
-        AudioCapture audio;
-        if (!audio.initialize()) {
-            std::cerr << "Audio init failed\n";
-            return -1;
-        }
+#pragma endregion
+       
         audio.start();
-
         sf::Clock clock;
         while (window.isOpen())
         {
@@ -146,7 +149,11 @@ int main()
                     alien.draw(window);
                 }
                 else {
-                    
+                    // Aliens have a 1/10000 chance to revive each frame when dead
+                    if (std::uniform_int_distribution<int>(0, 10000)(rng) < 1) {
+                        alien.respawn(sf::Vector2f(distX(rng), distY(rng)));
+                        //std::cout << "I'M BACK";
+                    }
                 }
             }
 
