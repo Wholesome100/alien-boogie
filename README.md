@@ -42,4 +42,5 @@ Some ideas for future additions to alien-boogie include:
 - Visual Studio Community 2022
 
 ### Licensing
-All Rights Reserved, 2025
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
