@@ -6,7 +6,7 @@ enum class MovementState {
     WALK,
     DEAD
 };
-
+//we're gonna take over da world!!!
 enum class ActionState {
     NONE,
     BOOGIE,
