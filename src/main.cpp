@@ -8,7 +8,7 @@
 #include "audio_capture.hpp"
 #include "score_label.hpp"
 
-int main()
+int main() //hello ^^
 {
 
     HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
